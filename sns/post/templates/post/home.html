@@ -1,0 +1,9 @@
+<h1>Home</h1>
+
+{% if user.is_authenticated %}
+<p>こんにちは！ {{ user.username }} さん </p>
+<a href="{% url 'logout' %}">ログアウト</a>
+{% else %}
+<p> ログインしていません。</p>
+<a href="{% url 'login' %}">ログイン</a>
+{% endif %}
