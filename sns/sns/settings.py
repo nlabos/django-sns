@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'account',
-    'post'
+    'account.apps.AccountConfig',
+    'post.apps.PostConfig'
 ]
 
 MIDDLEWARE = [
