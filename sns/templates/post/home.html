@@ -1,0 +1,29 @@
+{% extends 'post/base.html' %}
+{% load tz %}
+{% block content %}
+<div class="container">
+    <h1>Home</h1>
+
+    {% if user.is_authenticated %}
+    <p>こんにちは！ {{ user.username }} さん </p>
+    <a href="{% url 'logout' %}">ログアウト</a>
+    {% else %}
+    <p> ログインしていません。</p>
+    <a href="{% url 'login' %}">ログイン</a>
+    <a href="{% url 'signup' %}">登録</a>
+    {% endif %}
+
+    <h2>投稿一覧</h2>
+    {% for item in object_list %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ item.owner }}</h5>
+            <p class="card-text">{{ item.content }}</p>
+            <p class="card-text text-right">{{ item.created_at|timezone:'Asia/Tokyo' }}</p>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
