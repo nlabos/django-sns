@@ -2,6 +2,7 @@ from django.views import generic
 from django.shortcuts import redirect, render
 from .models import Post
 from .forms import PostForm
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -16,7 +17,7 @@ def create_post(request):
         post.content = content
         post.owner = user
         post.save()
-        
+        messages.success(request,'新しいメッセージを投稿しました。')
         return redirect(to='/')
     # それ以外
     else:
