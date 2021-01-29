@@ -127,5 +127,8 @@ AUTH_USER_MODEL = 'account.Account'
 LOGIN_REDIRECT_URL='/'
 
 MESSAGE_TAGS = {
+    messages.ERROR: 'alert alert-danger',
+    messages.WARNING: 'alert alert-warning',
     messages.SUCCESS: 'alert alert-success',
+    messages.INFO: 'alert alert-info'
 }

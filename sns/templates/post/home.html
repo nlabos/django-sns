@@ -29,7 +29,7 @@
           <h5 class="card-title">{{ item.owner }}</h5>
           <p class="card-text">{{ item.content }}</p>
           <p class="card-text text-right">{{ item.created_at }}</p>
-
+          <a href="post/{{ item.pk }}" class="btn btn-primary">詳細</a>
         </div>
       </div>
     {% endfor %}

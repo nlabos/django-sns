@@ -28,6 +28,22 @@ def create_post(request):
     }
     return render(request, 'post/create.html',params)
 
+def post_detail(request,pk):
+    data = Post.objects.get(pk = pk)
+    params = {
+        'object': data 
+    }
+    return render(request, 'post/detail.html',params)
+
+def post_delete(request,pk):
+    if request.method == 'POST':
+        data = Post.objects.get(pk = pk)
+        data.delete()
+        messages.success(request,'メッセージを削除しました')
+    else:
+        messages.error(request,'正しい方法で削除してください')
+    return redirect(to='/')
+
 def index(request,num=1):
     data = Post.objects.all()
     page = Paginator(data, 5)
