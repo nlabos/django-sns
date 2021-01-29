@@ -1,10 +1,10 @@
 {% extends 'account/base.html' %}
 
 {% block content %}
-<h1>ログインフォーム</h1>
-<form method="post">
+  <h1>ログインフォーム</h1>
+  <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="submit btn btn-primary">ログインする</button>
-</form>
+  </form>
 {% endblock %}

@@ -4,6 +4,7 @@ from .models import Post
 from .forms import PostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 # Create your views here.
 
 @login_required
@@ -27,9 +28,10 @@ def create_post(request):
     }
     return render(request, 'post/create.html',params)
 
-def index(request):
+def index(request,num=1):
     data = Post.objects.all()
+    page = Paginator(data, 5)
     params = {
-        'object_list': data
+        'object_list': page.get_page(num)
     }
     return render(request, 'post/home.html',params)
