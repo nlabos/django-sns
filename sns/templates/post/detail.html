@@ -8,9 +8,11 @@
         <p class="card-text">{{ object.content }}</p>
         <p class="card-text text-right">{{ object.created_at }}</p>
         <a href="{% url 'index' %}" class="btn btn-primary">トップに戻る</a>
+        {% if user == object.owner %}
         <form action="{% url  'delete' object.pk %}" style="display: inline-block;" method="POST">
           {% csrf_token %}
           <button class="btn btn-danger">削除</a>
+        {% endif %}
         </form>
       </div>
     </div>

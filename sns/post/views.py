@@ -35,9 +35,10 @@ def post_detail(request,pk):
     }
     return render(request, 'post/detail.html',params)
 
+@login_required
 def post_delete(request,pk):
     if request.method == 'POST':
-        data = Post.objects.get(pk = pk)
+        data = Post.objects.get(pk = pk,owner = request.user)
         data.delete()
         messages.success(request,'メッセージを削除しました')
     else:
