@@ -1,6 +1,6 @@
 from django.views import generic
 from django.shortcuts import redirect, render
-from .models import Post
+from .models import Post,Favorite
 from .forms import PostForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -31,8 +31,13 @@ def create_post(request):
 def post_detail(request,pk):
     data = Post.objects.get(pk = pk)
     params = {
-        'object': data 
+        'object': data,
+        'is_favorite': False
     }
+    if request.user.is_authenticated:
+        is_favorite = Favorite.objects.filter(owner = request.user).filter(content_id = data).count()
+        if is_favorite > 0:
+            params['is_favorite'] = True    
     return render(request, 'post/detail.html',params)
 
 @login_required
@@ -43,6 +48,28 @@ def post_delete(request,pk):
         messages.success(request,'メッセージを削除しました')
     else:
         messages.error(request,'正しい方法で削除してください')
+    return redirect(to='/')
+
+@login_required
+def post_favorite(request,pk):
+    if request.method == 'POST':
+        # favoriteする投稿を取得
+        data = Post.objects.get(pk = pk)
+        # 自分が既にfavoriteしているか確認
+        is_favorite = Favorite.objects.filter(owner = request.user).filter(content_id = data).count()
+        if is_favorite > 0:
+            messages.error(request, '既にそのメッセージにはお気に入り登録をしています。')
+            return redirect(to='/')
+        
+        data.favorite_count += 1
+        data.save()
+        favorite = Favorite()
+        favorite.owner = request.user
+        favorite.content_id = data
+        favorite.save()
+        messages.success(request,'メッセージをお気に入りに登録しました')
+    else:
+        messages.error(request,'正しい方法でお気に入りに登録してください')
     return redirect(to='/')
 
 def index(request,num=1):
