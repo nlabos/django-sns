@@ -5,9 +5,10 @@
 
     {% if user.is_authenticated %}
       <p>こんにちは！
-        {{ user.username }}
+        <img src="{{ user.avator.url }}"  style="width:50px;height:auto">{{ user.username }}</img>
         さん
       </p>
+      
       <a href="{% url 'logout' %}">ログアウト</a>
     {% else %}
       <p>

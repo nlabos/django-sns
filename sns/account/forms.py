@@ -2,6 +2,8 @@ from django.contrib.auth.forms import (AuthenticationForm, PasswordResetForm,
 SetPasswordForm,UserCreationForm,PasswordChangeForm)
 from django.forms.models import ModelForm
 from .models import Account
+from PIL import Image
+
 
 class AccountSiginupForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
@@ -58,3 +60,8 @@ class AccountSetPasswordForm(SetPasswordForm):
 
     class Meta:
         model = Account
+
+class AccountAvatorUploadForm(ModelForm):
+    class Meta:
+        model = Account
+        fields = ('avator',)

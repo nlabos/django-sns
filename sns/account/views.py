@@ -10,7 +10,7 @@ from django.shortcuts import redirect
 from django.contrib.sites.shortcuts import get_current_site
 from .forms import (AccountLoginForm, AccountPasswordChangeForm,
     AccountSiginupForm,AccountEmailChangeForm,AccountPasswordRestForm,
-    AccountSetPasswordForm)
+    AccountSetPasswordForm, AccountAvatorUploadForm)
 from .models import Account
 
 # Create your views here.
@@ -105,3 +105,18 @@ class AccountPasswordResetConfirm(auth_views.PasswordResetConfirmView):
 
 class AccountPasswordResetComplete(auth_views.PasswordResetCompleteView):
     template_name = 'account/password_reset_complete.html'
+
+class AccountAvatorUploaView(LoginRequiredMixin, generic.FormView):
+    template_name = 'account/avator_upload_form.html'
+    form_class = AccountAvatorUploadForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        avator = form.cleaned_data['avator']
+        account = Account.objects.get(username = user)
+        account.avator = avator
+        account.save()
+        return redirect('avator_upload_done')
+
+class AccountAvatorUploadDoneView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'account/avator_upload_done.html'
