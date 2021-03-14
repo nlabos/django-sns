@@ -1,8 +1,15 @@
+from django.http.response import HttpResponseBadRequest
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import AccountSiginupForm, AccountLoginForm,AccountPasswordChangeForm
+from django.core.signing import BadSignature, SignatureExpired, dumps, loads
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.shortcuts import redirect
+from django.contrib.sites.shortcuts import get_current_site
+from .forms import AccountLoginForm, AccountPasswordChangeForm,\
+    AccountSiginupForm,AccountEmailChangeForm
 from .models import Account
 
 # Create your views here.
@@ -28,3 +35,54 @@ class AccountPasswordChangeView(LoginRequiredMixin,auth_views.PasswordChangeView
 
 class AccountPasswordChangeDoneView(LoginRequiredMixin,auth_views.PasswordResetDoneView):
     template_name= 'account/password_change_done.html'
+
+class AccountEmailChangeView(LoginRequiredMixin, generic.FormView):
+    template_name = 'account/email_change_form.html'
+    form_class = AccountEmailChangeForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        new_email = form.cleaned_data['email']
+
+        # URLを作成
+        current_site = get_current_site(self.request)
+        domain = current_site.domain
+        context = {
+            'protocol': 'https' if self.request.is_secure() else 'http',
+            'domain': domain,
+            'token': dumps(new_email),
+            'user': user,
+        }
+
+        subject = render_to_string('account/mail/email_change_subject.txt', context)
+        message = render_to_string('account/mail/email_change_message.txt', context)
+        
+        #メールの送信
+        send_mail(subject, message, None, [new_email])
+
+        return redirect('email_change_done')
+
+class AccountEmailChangeDoneView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'account/email_change_done.html'
+
+class AccountEmailChangeCompleteView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'account/email_change_complete.html'
+
+    def get(self, request, **kwargs):
+        token = kwargs.get('token')
+        try:
+            new_email = loads(token, max_age=60*60*24)
+
+        # 期限切れ
+        except SignatureExpired:
+            return HttpResponseBadRequest()
+
+        # tokenミス
+        except BadSignature:
+            return HttpResponseBadRequest()
+
+        # 問題なし
+        else:
+            request.user.email = new_email
+            request.user.save()
+            return super().get(request, **kwargs)

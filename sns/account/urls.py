@@ -10,5 +10,12 @@ urlpatterns = [
     path('password_change/done/',views.AccountPasswordChangeDoneView.as_view(),
     name='password_change_done'),
 
+    path('email/change/', 
+    views.AccountEmailChangeView.as_view(), name='email_change'),
+    path('email/change/done/', 
+    views.AccountEmailChangeDoneView.as_view(), name='email_change_done'),
+    path('email/change/complete/<str:token>/', 
+    views.AccountEmailChangeCompleteView.as_view(), name='email_change_complete'),
+
     path('<int:pk>', views.AccountDetailView.as_view(), name='detail'),
 ]
