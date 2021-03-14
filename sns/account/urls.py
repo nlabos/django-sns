@@ -17,5 +17,14 @@ urlpatterns = [
     path('email/change/complete/<str:token>/', 
     views.AccountEmailChangeCompleteView.as_view(), name='email_change_complete'),
 
+    path('password_reset/', 
+    views.AccountPasswordRestView.as_view(), name='password_reset'),
+    path('password_reset/done/', 
+    views.AccountPasswordRestDoneView.as_view(), name='password_reset_done'),
+    path('password_reset/confirm/<uidb64>/<token>/', 
+    views.AccountPasswordResetConfirm.as_view(), name='password_reset_confirm'),
+    path('password_reset/complete/', 
+    views.AccountPasswordResetComplete.as_view(), name='password_reset_complete'),
+
     path('<int:pk>', views.AccountDetailView.as_view(), name='detail'),
 ]

@@ -8,8 +8,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.shortcuts import redirect
 from django.contrib.sites.shortcuts import get_current_site
-from .forms import AccountLoginForm, AccountPasswordChangeForm,\
-    AccountSiginupForm,AccountEmailChangeForm
+from .forms import (AccountLoginForm, AccountPasswordChangeForm,
+    AccountSiginupForm,AccountEmailChangeForm,AccountPasswordRestForm,
+    AccountSetPasswordForm)
 from .models import Account
 
 # Create your views here.
@@ -86,3 +87,21 @@ class AccountEmailChangeCompleteView(LoginRequiredMixin, generic.TemplateView):
             request.user.email = new_email
             request.user.save()
             return super().get(request, **kwargs)
+
+class AccountPasswordRestView(auth_views.PasswordResetView):
+    subject_template_name = 'account/mail/password_reset_subject.txt'
+    email_template_name = 'account/mail/password_reset_message.txt'
+    form_class = AccountPasswordRestForm
+    template_name = 'account/password_reset.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class AccountPasswordRestDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'account/password_reset_done.html'
+
+class AccountPasswordResetConfirm(auth_views.PasswordResetConfirmView):
+    form_class = AccountSetPasswordForm
+    template_name = 'account/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+class AccountPasswordResetComplete(auth_views.PasswordResetCompleteView):
+    template_name = 'account/password_reset_complete.html'
