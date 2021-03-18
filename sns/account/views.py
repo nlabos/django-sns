@@ -106,7 +106,7 @@ class AccountPasswordResetConfirm(auth_views.PasswordResetConfirmView):
 class AccountPasswordResetComplete(auth_views.PasswordResetCompleteView):
     template_name = 'account/password_reset_complete.html'
 
-class AccountAvatorUploaView(LoginRequiredMixin, generic.FormView):
+class AccountAvatorUploadView(LoginRequiredMixin, generic.FormView):
     template_name = 'account/avator_upload_form.html'
     form_class = AccountAvatorUploadForm
 
