@@ -31,4 +31,6 @@ urlpatterns = [
     path('avator/upload/done', 
     views.AccountAvatorUploadDoneView.as_view(), name='avator_upload_done'),
     path('<int:pk>', views.AccountDetailView.as_view(), name='detail'),
+
+    path('<int:pk>/follow/', views.post_follow, name='follow'),
 ]
