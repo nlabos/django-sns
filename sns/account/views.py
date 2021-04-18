@@ -11,7 +11,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from .forms import (AccountLoginForm, AccountPasswordChangeForm,
     AccountSiginupForm,AccountEmailChangeForm,AccountPasswordRestForm,
     AccountSetPasswordForm, AccountAvatorUploadForm)
-from .models import Account
+from .models import Account,Follow
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 class AccountSignUpView(generic.CreateView):
@@ -120,3 +122,31 @@ class AccountAvatorUploadView(LoginRequiredMixin, generic.FormView):
 
 class AccountAvatorUploadDoneView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'account/avator_upload_done.html'
+
+# フォロー機能
+@login_required
+def post_follow(request,pk):
+    if request.method == "POST":
+        # Followするユーザーを取得
+        follow_user = Account.objects.get(pk = pk)
+        # 自分に対してフォローしていないか確認
+        if request.user == follow_user:
+            messages.error(request, '自分に対してはフォローできません。')
+            return redirect(to='/')
+        
+        # Followerカウントを増やす
+        follow_user.follower_count =+ 1
+        follow_user.save()
+        # Followingカウントを増やす
+        request.user.following_count =+ 1
+        request.user.save()
+
+        follow = Follow()
+        follow.follow_id = request.user
+        follow.follower_id = follow_user
+        follow.save()
+
+        messages.success(request,'ユーザーをフォローしました。')
+    else:
+        messages.error(request,'正しい方法でフォローしてください')
+    return redirect(to='/')
