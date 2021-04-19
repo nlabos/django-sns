@@ -1,3 +1,5 @@
+from account.models import Follow,Account
+from django.db.models.query_utils import Q
 from django.views import generic
 from django.shortcuts import redirect, render
 from .models import Post,Favorite
@@ -79,3 +81,19 @@ def index(request,num=1):
         'object_list': page.get_page(num)
     }
     return render(request, 'post/home.html',params)
+
+def home_timeline(request,num=1):
+    # フォローしている人を取得する
+    followings = Follow.objects.filter(follow_id = request.user)
+    # フォローしているアカウント詳細を取得する
+    following_account = Account.objects.filter(Q(pk__in = followings))
+
+    # フォローしている人達の投稿 かつ 自分の投稿を取得する
+    data = Post.objects.filter(Q(owner__in = following_account) | Q(owner = request.user))
+
+    page = Paginator(data, 5)
+
+    params = {
+        'object_list': page.get_page(num)
+    }
+    return render(request, 'post/timeline.html',params)
