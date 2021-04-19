@@ -25,7 +25,7 @@
                 {{ object.favorite_count}}</button>
             </form>
           {% endif %}
-          
+          <a href="{% url 'detail' user.pk %}">プロフィール</a>
         {% endif %}
       </div>
     </div>
