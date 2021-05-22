@@ -11,3 +11,8 @@ pillow = "*"
 
 [requires]
 python_version = "3.9"
+
+[scripts]
+start = "python sns/manage.py runserver"
+makemigrations = "python sns/manage.py makemigrations"
+migrate = "python sns/manage.py migrate"
