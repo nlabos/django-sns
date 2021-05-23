@@ -11,6 +11,7 @@ class Post(models.Model):
     content = models.CharField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     favorite_count = models.IntegerField(default=0)
+    image = models.ImageField(upload_to='', null=True, blank=True)
     class Meta:
         ordering = ('-created_at',)
 
