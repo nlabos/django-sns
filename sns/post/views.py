@@ -19,6 +19,8 @@ def create_post(request):
         post = Post()
         post.content = content
         post.owner = user
+        if request.FILES:
+            post.image = request.FILES['image']
         post.save()
         messages.success(request,'新しいメッセージを投稿しました。')
         return redirect(to='/')

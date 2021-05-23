@@ -6,6 +6,9 @@
           <a href="{% url 'detail' item.owner.pk %}">{{ item.owner }}</a>
         </h5>
         <p class="card-text">{{ item.content }}</p>
+        {% if item.image %}
+          <img class="img-fluid" src="{{ item.image.url }}" alt="" />
+        {% endif %}
         <p class="card-text text-right">{{ item.created_at }}</p>
         <a href="{% url 'post_detail' item.pk %}" class="btn btn-primary">詳細</a>
       </div>
