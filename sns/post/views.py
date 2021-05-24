@@ -19,6 +19,7 @@ def create_post(request):
         post = Post()
         post.content = content
         post.owner = user
+        post.visibility = request.POST['visibility']
         if request.FILES:
             post.image = request.FILES['image']
         post.save()
@@ -77,7 +78,7 @@ def post_favorite(request,pk):
     return redirect(to='/')
 
 def index(request,num=1):
-    data = Post.objects.all()
+    data = Post.objects.filter(visibility = "PUBLIC")
     page = Paginator(data, 5)
     params = {
         'object_list': page.get_page(num)
