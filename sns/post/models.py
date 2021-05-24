@@ -12,6 +12,15 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     favorite_count = models.IntegerField(default=0)
     image = models.ImageField(upload_to='', null=True, blank=True)
+    VISIBILITY_CHOICE=[
+        ('PUBLIC','公開'),
+        ('PRIVATE','非公開'),
+    ]
+    visibility = models.CharField(
+        max_length=10,
+        choices=VISIBILITY_CHOICE,
+        default='PUBLIC'
+    )
     class Meta:
         ordering = ('-created_at',)
 
